@@ -62,6 +62,9 @@ app/
 │   └── database.py     # DB & Redis connections
 └── main.py             # Application Entry Point
 
+
+```text
+
 # سیستم مدیریت موجودی انبار  📦
 
 یک سیستم مدیریت موجودی مدرن، مقیاس‌پذیر و با کارایی بالا که با استفاده از **FastAPI**، **PostgreSQL** و **Redis** ساخته شده است. این پروژه بر اساس اصول **معماری تمیز (Clean Architecture)** طراحی شده تا کدی خوانا، قابل تست و قابل نگهداری ارائه دهد.
