@@ -1,63 +1,78 @@
-# Inventory Management System 📦
+# سیستم مدیریت هوشمند انبار 📦 | Smart Inventory Management System
 
-A modern, scalable, and high-performance inventory management system built with **FastAPI**, **PostgreSQL**, and **Redis**. This project is designed following **Clean Architecture** principles to ensure readable, testable, and maintainable code.
+[English Version Below](#english-version)
 
+این یک سیستم مدیریت انبار مدرن و مقیاس‌پذیر است که با استفاده از **FastAPI**، **PostgreSQL** (در محیط توسعه SQLite) و **Redis** ساخته شده است. این برنامه دارای رابط کاربری وب فارسی و سیستم کنترل دسترسی بر اساس نقش (RBAC) می‌باشد.
+
+## ✨ ویژگی‌های کلیدی
+
+### ۱. رابط کاربری وب حرفه‌ای 🎨
+دارای سه پنل مجزا برای کاربران مختلف با استفاده از فونت زیبای **وزیرمتن** و **بوت‌استرپ ۵**:
+- **پنل مدیر**: مدیریت کامل محصولات و مشاهده گزارش‌ها.
+- **پنل فروشنده**: ثبت سریع فروش و مرجوعی کالا.
+- **پنل انباردار**: ثبت شمارش کالا و اصلاح موجودی (Adjustment).
+
+### ۲. امنیت و سطوح دسترسی (RBAC) 🔐
+دسترسی‌ها به دقت بر اساس نقش کاربر محدود شده است تا امنیت داده‌ها حفظ شود.
+
+### ۳. کنترل همزمانی (Optimistic Locking) 🔒
+استفاده از سیستم نسخه گذاری برای جلوگیری از تداخل در به‌روزرسانی موجودی توسط چندین کاربر به صورت همزمان.
+
+### ۴. معماری پاک (Clean Architecture) 🏗️
+جداسازی لایه‌های منطق تجاری، دسترسی به داده‌ها و ارائه برای نگهداری آسان‌تر.
+
+---
+
+## 📸 اسکرین‌شات‌ها
+
+### ۱. صفحه ورود (Login)
+![Login Screen](screenshots/login.png)
+
+### ۲. پنل مدیریت (Manager Panel)
+![Manager Dashboard](screenshots/manager.png)
+
+### ۳. پنل فروشنده (Seller Panel)
+![Seller Dashboard](screenshots/seller.png)
+
+### ۴. پنل انباردار (Worker Panel)
+![Worker Dashboard](screenshots/worker.png)
+
+---
+
+## 🚀 راه اندازی
+
+۱. نصب وابستگی‌ها:
+```bash
+pip install -r requirements.txt
+```
+
+۲. آماده‌سازی دیتابیس و داده‌های تستی (Persian Seed):
+```bash
+PYTHONPATH=. python3 scripts/seed_data.py
+```
+
+۳. اجرای برنامه:
+```bash
+uvicorn app.main:app --reload
+```
+
+---
+
+<a name="english-version"></a>
+# Smart Inventory Management System 📦
+
+A modern, scalable inventory system built with **FastAPI**, **PostgreSQL**, and **Redis**. Featuring a dedicated Persian Web UI and Role-Based Access Control (RBAC).
 
 ## ✨ Key Features
 
-### 1. Optimistic Locking for Concurrency Control 🔒
-One of the biggest challenges in inventory systems is race conditions (e.g., two users buying the last item simultaneously).
-- We use a `version` column in the `products` table.
-- When updating stock, if the `version` in the database differs from the one in memory, the transaction is rejected.
-- This prevents **Race Conditions** and ensures data integrity without heavy database locking.
-
-### 2. Clean Architecture 🏗️
-The code is separated into distinct layers:
-- **Presentation Layer**: FastAPI routers and Pydantic models.
-- **Service Layer**: Business logic, stock calculations, and error handling.
-- **Repository Layer**: Direct database interactions (SQLAlchemy).
-- **Infrastructure**: Database connections, Redis, and configurations.
-
-### 3. Smart Caching with Redis ⚡
-- Product details are cached in **Redis** (TTL: 5 minutes).
-- This significantly reduces load on PostgreSQL and speeds up API responses.
-- Cache is invalidated automatically whenever a product is updated to prevent stale data.
-
-### 4. Comprehensive Auditing & History 📊
-- Every stock change (Purchase, Sale, Return) is recorded in `inventory_transactions`.
-- Price and stock snapshots are saved in `stock_history` for trend analysis and auditing purposes.
-
-### 5. Rate Limiting 🛡️
-- To prevent abuse or DDoS attacks, sensitive endpoints (like stock updates) are rate-limited based on IP address using Redis.
-
----
+- **Multi-Role Web UI**: Dedicated panels for Manager, Seller, and Warehouse Worker.
+- **RBAC**: Secure endpoints and UI elements based on user roles.
+- **Optimistic Locking**: Prevents race conditions during stock updates.
+- **Persian Support**: Full support for Persian language and Vazirmatn font.
+- **API Documentation**: Comprehensive documentation in `README_API.md`.
 
 ## 🛠️ Tech Stack
-
-- **Language**: Python 3.10+
-- **Web Framework**: FastAPI (Async)
-- **Database**: PostgreSQL (with SQLAlchemy Async)
-- **Cache**: Redis
-- **Validation**: Pydantic V2
-- **Package Manager**: Pip
-
----
-
-## 📂 Project Structure
-
-```text
-app/
-├── api/                # Presentation Layer (Router & Schemas)
-│   ├── routes.py       # API Endpoint definitions
-│   └── schemas.py      # Pydantic Input/Output models
-├── core/               # Core Configuration
-│   └── config.py       # Environment variables & settings
-├── models/             # Database Models (SQLAlchemy)
-│   └── inventory.py    # Tables: Products, Transactions, History
-├── repositories/       # Data Access Layer
-│   └── inventory_repo.py # Database queries
-├── services/           # Business Logic Layer
-│   └── inventory_service.py # Transaction management, Caching, Locking
-├── infrastructure/     # Infrastructure Setup
-│   └── database.py     # DB & Redis connections
-└── main.py             # Application Entry Point
+- **Backend**: FastAPI (Python)
+- **Database**: SQLAlchemy, SQLite (Development), PostgreSQL (Production ready)
+- **Frontend**: HTML5, CSS3 (Bootstrap 5), JavaScript
+- **Auth**: JWT (JSON Web Tokens)
