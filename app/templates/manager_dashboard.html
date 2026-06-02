@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}پنل مدیریت{% endblock %}
+{% block content %}
+<h2>داشبورد مدیر</h2>
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">لیست محصولات</h5>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>نام</th>
+                    <th>قیمت</th>
+                    <th>موجودی</th>
+                </tr>
+            </thead>
+            <tbody id="product-list"></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => { loadProducts(); });
+</script>
+{% endblock %}

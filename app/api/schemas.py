@@ -81,4 +81,13 @@ class StockHistoryResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        
+
+class UserResponse(BaseModel):
+    id: UUID
+    username: str
+    full_name: Optional[str]
+    role: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

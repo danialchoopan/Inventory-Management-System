@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}پنل انباردار{% endblock %}
+{% block content %}
+<h2>داشبورد انباردار</h2>
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">اصلاح موجودی</h5>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>SKU</th>
+                    <th>موجودی فعلی</th>
+                    <th>تغییر</th>
+                    <th>ثبت</th>
+                </tr>
+            </thead>
+            <tbody id="product-adjustment-list"></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => { loadProductsForAdjustment(); });
+</script>
+{% endblock %}

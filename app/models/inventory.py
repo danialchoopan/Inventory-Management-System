@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from enum import Enum
-from sqlalchemy import Column, String, Integer, Decimal, DateTime, ForeignKey, Index, Enum as SQLEnum
+from sqlalchemy import Column, String, Integer, Numeric, DateTime, ForeignKey, Index, Enum as SQLEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.infrastructure.database import Base
@@ -24,7 +24,7 @@ class Product(Base):
     name = Column(String(255), nullable=False) # Supports UTF-8 for Farsi 🇮🇷
     description = Column(String, nullable=True) # Text type for longer descriptions
     current_stock = Column(Integer, nullable=False, default=0)
-    price = Column(Decimal(10, 2), nullable=False, default=0.00)
+    price = Column(Numeric(10, 2), nullable=False, default=0.00)
     
     # Optimistic Locking Column
     version = Column(Integer, nullable=False, default=1)
@@ -55,12 +55,13 @@ class InventoryTransaction(Base):
     transaction_type = Column(SQLEnum(TransactionType), nullable=False)
     
     reference_id = Column(String(100), nullable=True) # e.g., Order ID, Invoice Number
-    performed_by = Column(UUID(as_uuid=True), nullable=True) # User ID who made the change
+    performed_by = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True) # User ID who made the change
     
     created_at = Column(DateTime, default=datetime.utcnow, index=True) # Indexed for time-range queries
 
     # Relationship
     product = relationship("Product", back_populates="transactions")
+    user = relationship("app.models.user.User")
 
     # Indexes for performance
     __table_args__ = (
@@ -81,8 +82,8 @@ class StockHistory(Base):
     old_stock = Column(Integer, nullable=False)
     new_stock = Column(Integer, nullable=False)
     
-    old_price = Column(Decimal(10, 2), nullable=False)
-    new_price = Column(Decimal(10, 2), nullable=False)
+    old_price = Column(Numeric(10, 2), nullable=False)
+    new_price = Column(Numeric(10, 2), nullable=False)
     
     changed_at = Column(DateTime, default=datetime.utcnow, index=True) # Indexed for trends
 
@@ -108,4 +109,3 @@ class Warehouse(Base):
 
     def __repr__(self):
         return f"<Warehouse(name='{self.name}')>"
-    

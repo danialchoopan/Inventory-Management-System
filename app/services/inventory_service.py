@@ -3,7 +3,7 @@ import json
 from typing import Optional
 from uuid import UUID
 from decimal import Decimal
-from sqlalchemy.exc import StaleDataError
+from sqlalchemy.orm.exc import StaleDataError
 from sqlalchemy.ext.asyncio import AsyncSession
 from redis import asyncio as aioredis
 
@@ -28,9 +28,11 @@ class InventoryService:
 
 
     async def _get_cached_product(self, sku: str) -> Optional[dict]:
+        if redis_client is None:
+            return None
         try:
             cached_data = await redis_client.get(f"product:{sku}")
-            if cached_
+            if cached_data:
                 logger.info(f"Cache HIT for SKU: {sku}")
                 return json.loads(cached_data)
         except Exception as e:
@@ -38,6 +40,8 @@ class InventoryService:
         return None
 
     async def _cache_product(self, product: Product):
+        if redis_client is None:
+            return
         try:
             product_dict = {
                 "id": str(product.id),
@@ -60,6 +64,8 @@ class InventoryService:
             logger.error(f"Redis error on set: {e}")
 
     async def _invalidate_cache(self, sku: str):
+        if redis_client is None:
+            return
         try:
             await redis_client.delete(f"product:{sku}")
             logger.info(f"Cache INVALIDATED for SKU: {sku}")
@@ -67,7 +73,7 @@ class InventoryService:
             logger.error(f"Redis error on delete: {e}")
 
 
-    async def create_product(self, product_ ProductCreate) -> Product:
+    async def create_product(self, product_data: ProductCreate) -> Product:
         product = await self.product_repo.create_product(product_data)
         await self._cache_product(product)
         return product
@@ -85,7 +91,7 @@ class InventoryService:
             
         return product
 
-    async def update_product_details(self, sku: str, update_ ProductUpdate) -> Product:
+    async def update_product_details(self, sku: str, update_data: ProductUpdate) -> Product:
         product = await self.product_repo.get_product_by_sku(sku)
         if not product:
             raise ValueError("Product not found")
@@ -94,7 +100,7 @@ class InventoryService:
         await self._invalidate_cache(sku)
         return updated_product
 
-    async def update_stock(self, sku: str, stock_request: StockUpdateRequest) -> Product:
+    async def update_stock(self, sku: str, stock_request: StockUpdateRequest, performed_by: Optional[UUID] = None) -> Product:
        
         product = await self.product_repo.get_product_by_sku(sku)
         if not product:
@@ -114,7 +120,8 @@ class InventoryService:
                 product_id=product.id,
                 quantity_change=stock_request.quantity_change,
                 transaction_type=stock_request.transaction_type,
-                reference_id=stock_request.reference_id
+                reference_id=stock_request.reference_id,
+                performed_by=performed_by
             )
             await self.txn_repo.create_transaction(txn)
 

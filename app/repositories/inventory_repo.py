@@ -39,7 +39,7 @@ class ProductRepository:
         )
         return result.scalars().first()
 
-    async def update_product_details(self, product: Product, update_ ProductUpdate) -> Product:
+    async def update_product_details(self, product: Product, update_data: ProductUpdate) -> Product:
         if update_data.name is not None:
             product.name = update_data.name
         if update_data.description is not None:

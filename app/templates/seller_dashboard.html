@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}پنل فروشنده{% endblock %}
+{% block content %}
+<h2>داشبورد فروشنده</h2>
+<div class="card mt-4">
+    <div class="card-body">
+        <h5 class="card-title">فروش محصول</h5>
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th>نام</th>
+                    <th>قیمت</th>
+                    <th>موجودی</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="product-sale-list"></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => { loadProductsForSale(); });
+</script>
+{% endblock %}
