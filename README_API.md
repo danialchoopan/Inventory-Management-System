@@ -1,53 +1,62 @@
-# Inventory Management API 🚀
+# راهنمای جامع API سیستم مدیریت انبار پیشرفته 🚀
 
-This document details the available API endpoints and authentication flow for the Inventory Management System.
+این مستند شامل جزییات تمامی فراخوان‌های API برای سیستم مدیریت انبارداری هوشمند است.
 
-## Base URL
-`/inventory` (Inventory operations)
-`/auth` (Authentication)
+## معماری و امنیت 🔐
+تمامی درخواست‌ها باید از پروتکل HTTPS استفاده کنند (در محیط تولید). احراز هویت از طریق **JWT (JSON Web Token)** انجام می‌شود.
 
-## Authentication 🔐
-
-The API uses JWT-based authentication.
-
-### Login
-- **URL**: `/auth/login`
-- **Method**: `POST`
-- **Data**: `username`, `password` (Form data)
-- **Response**: `{ "access_token": "...", "token_type": "bearer" }`
-
-Include the token in the header of subsequent requests:
-`Authorization: Bearer <your_token>`
-
-## Role-Based Access Control (RBAC) 🛡️
-
-| Role | Description | Permissions |
-| :--- | :--- | :--- |
-| **MANAGER** | System Admin | Full access (CRUD Products, All Transactions) |
-| **SELLER** | Sales Staff | Read Products, Sales & Returns only |
-| **WORKER** | Warehouse Staff | Read Products, Stock Adjustments (Counting) only |
-
-## Endpoints Summary
-
-### User Profile
-- `GET /inventory/me`: Returns current user info.
-
-### Products
-- `GET /inventory/products`: List all products (All roles).
-- `POST /inventory/products`: Create new product (**MANAGER** only).
-- `GET /inventory/products/{sku}`: Get product details (All roles).
-- `PUT /inventory/products/{sku}`: Update product details (**MANAGER** only).
-
-### Stock Operations
-- `POST /inventory/products/{sku}/stock`: Update stock level.
-  - Workers can only use `ADJUSTMENT`.
-  - Sellers can use `SALE` or `RETURN`.
-  - Managers can use any type.
-
-### History & Auditing
-- `GET /inventory/products/{id}/transactions`: List transactions for a product.
-- `GET /inventory/products/{id}/history`: List price/stock history for a product.
+### نقش‌های کاربری (RBAC)
+- `ADMIN`: دسترسی کامل به تمامی بخش‌ها و گزارشات استراتژیک.
+- `SELLER`: ثبت سفارش، پیش‌فاکتور و مدیریت تامین‌کنندگان.
+- `CASHIER`: سیستم فروش سریع (POS) و مدیریت صندوق.
+- `STOREKEEPER`: مدیریت جانمایی کالا و صدور رسید/حواله.
+- `WORKER`: عملیات Picking/Packing و انبارگردانی.
 
 ---
 
-*Note: All product names and descriptions support Persian (UTF-8) characters.*
+## ۱. احراز هویت (Authentication)
+
+### ورود به سیستم
+- **مسیر:** `POST /auth/login`
+- **ورودی:** `username`, `password` (Form Data)
+- **پاسخ:**
+```json
+{
+  "access_token": "eyJhbG...",
+  "token_type": "bearer"
+}
+```
+
+---
+
+## ۲. مدیریت کالاها (Products)
+
+### لیست کالاها
+- **مسیر:** `GET /inventory/products`
+- **دسترسی:** تمامی نقش‌ها
+
+### تعریف کالای جدید
+- **مسیر:** `POST /inventory/products`
+- **دسترسی:** `ADMIN`
+
+---
+
+## ۳. عملیات انبار (Warehouse Operations)
+
+### به‌روزرسانی موجودی و جابجایی
+- **مسیر:** `POST /inventory/products/{sku}/stock`
+- **توضیح:** بسته به نقش کاربر، انواع تراکنش (SALE, PURCHASE, TRANSFER, ADJUSTMENT) فیلتر می‌شود.
+
+### آمار داشبورد (Analytics)
+- **مسیر:** `GET /inventory/stats/overview`
+- **دسترسی:** `ADMIN`
+
+---
+
+## ۴. ویژگی‌های پیشرفته (Advanced Features)
+
+### رهگیری بچ و سریال
+در هنگام ثبت رسید انبار، فیلدهای `batch_number` و `serial_number` در بدنه درخواست ارسال می‌شوند.
+
+### ممیزی سیستم (Audit Trail)
+گزارش‌های ممیزی از طریق پنل مدیریت با جزییات دقیق زمان (ثانیه) و کاربر قابل دریافت است.

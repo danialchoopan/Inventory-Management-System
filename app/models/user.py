@@ -6,9 +6,11 @@ from sqlalchemy.dialects.postgresql import UUID
 from app.infrastructure.database import Base
 
 class UserRole(str, Enum):
-    MANAGER = "MANAGER"
-    SELLER = "SELLER"
-    WORKER = "WORKER"
+    ADMIN = "ADMIN"          # مدیر کل
+    SELLER = "SELLER"        # فروشنده
+    CASHIER = "CASHIER"      # صندوق‌دار
+    STOREKEEPER = "STOREKEEPER" # انباردار
+    WORKER = "WORKER"        # کارگر انبار
 
 class User(Base):
     __tablename__ = "users"

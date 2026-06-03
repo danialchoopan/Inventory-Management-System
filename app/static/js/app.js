@@ -10,12 +10,21 @@ async function login(username, password) {
         const data = await response.json();
         localStorage.setItem('access_token', data.access_token);
         const user = await fetchUserProfile();
-        if (user.role === 'MANAGER') window.location.href = '/dashboard/manager';
-        else if (user.role === 'SELLER') window.location.href = '/dashboard/seller';
-        else if (user.role === 'WORKER') window.location.href = '/dashboard/worker';
+        handleRedirection(user.role);
         return true;
     }
     return false;
+}
+
+function handleRedirection(role) {
+    const roleMap = {
+        'ADMIN': 'manager',
+        'SELLER': 'seller',
+        'CASHIER': 'cashier',
+        'STOREKEEPER': 'storekeeper',
+        'WORKER': 'worker'
+    };
+    window.location.href = `/dashboard/${roleMap[role] || 'worker'}`;
 }
 
 async function fetchUserProfile() {
@@ -33,37 +42,42 @@ async function loadProducts() {
     const response = await fetch(`${API_BASE}/products`, { headers: { 'Authorization': `Bearer ${token}` } });
     const products = await response.json();
     const list = document.getElementById('product-list');
-    if (list) list.innerHTML = products.map(p => `<tr><td>${p.sku}</td><td>${p.name}</td><td>${p.price}</td><td>${p.current_stock}</td></tr>`).join('');
-}
-
-async function loadProductsForSale() {
-    const token = localStorage.getItem('access_token');
-    const response = await fetch(`${API_BASE}/products`, { headers: { 'Authorization': `Bearer ${token}` } });
-    const products = await response.json();
-    const list = document.getElementById('product-sale-list');
-    if (list) list.innerHTML = products.map(p => `<tr><td>${p.name}</td><td>${p.price}</td><td>${p.current_stock}</td><td><button class="btn btn-sm btn-primary" onclick="processStock('${p.sku}', 'SALE')">فروش</button></td></tr>`).join('');
-}
-
-async function loadProductsForAdjustment() {
-    const token = localStorage.getItem('access_token');
-    const response = await fetch(`${API_BASE}/products`, { headers: { 'Authorization': `Bearer ${token}` } });
-    const products = await response.json();
-    const list = document.getElementById('product-adjustment-list');
-    if (list) list.innerHTML = products.map(p => `<tr><td>${p.name}</td><td>${p.sku}</td><td>${p.current_stock}</td><td><input type="number" id="qty-${p.sku}" class="form-control" style="width:80px"></td><td><button class="btn btn-sm btn-warning" onclick="processStock('${p.sku}', 'ADJUSTMENT')">ثبت</button></td></tr>`).join('');
-}
-
-async function processStock(sku, type) {
-    const token = localStorage.getItem('access_token');
-    let qty = type === 'SALE' ? -1 : parseInt(document.getElementById(`qty-${sku}`).value);
-    await fetch(`${API_BASE}/products/${sku}/stock`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity_change: qty, transaction_type: type })
-    });
-    location.reload();
+    if (list) {
+        list.innerHTML = products.map(p => `
+            <tr>
+                <td><strong>${p.name}</strong></td>
+                <td><code class="small">${p.sku}</code></td>
+                <td>${p.total_stock}</td>
+                <td>-</td>
+                <td><span class="badge ${p.total_stock > 10 ? 'bg-success' : 'bg-warning'}">${p.total_stock > 10 ? 'موجود' : 'کمبود'}</span></td>
+                <td><button class="btn btn-sm btn-light border"><i class="bi bi-eye"></i></button></td>
+            </tr>
+        `).join('');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && document.getElementById('user-info')) document.getElementById('user-info').textContent = `${user.full_name} (${user.role})`;
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+        const user = JSON.parse(userStr);
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.classList.remove('d-none');
+            document.getElementById('user-fullname').textContent = user.full_name;
+            document.getElementById('user-role').textContent = user.role;
+
+            const nav = document.getElementById('nav-links');
+            let links = `
+                <li class="nav-item"><a class="nav-link ${window.location.pathname.includes('manager') ? 'active' : ''}" href="/dashboard/manager"><i class="bi bi-speedometer2 me-2"></i> داشبورد</a></li>
+                <li class="nav-item"><a class="nav-link ${window.location.pathname.includes('seller') ? 'active' : ''}" href="/dashboard/seller"><i class="bi bi-cart me-2"></i> فروش</a></li>
+                <li class="nav-item"><a class="nav-link ${window.location.pathname.includes('cashier') ? 'active' : ''}" href="/dashboard/cashier"><i class="bi bi-calculator me-2"></i> صندوق</a></li>
+                <li class="nav-item"><a class="nav-link ${window.location.pathname.includes('storekeeper') ? 'active' : ''}" href="/dashboard/storekeeper"><i class="bi bi-houses me-2"></i> انبارداری</a></li>
+                <li class="nav-item"><a class="nav-link ${window.location.pathname.includes('worker') ? 'active' : ''}" href="/dashboard/worker"><i class="bi bi-box-seam me-2"></i> عملیات</a></li>
+            `;
+            nav.innerHTML = links;
+            if (window.location.pathname.includes('manager')) loadProducts();
+        }
+    } else if (window.location.pathname !== '/') {
+        window.location.href = '/';
+    }
 });

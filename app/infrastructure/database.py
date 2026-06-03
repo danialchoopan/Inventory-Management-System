@@ -21,11 +21,16 @@ async_session_maker = async_sessionmaker(
 class Base(DeclarativeBase):
     pass
 
-redis_client = aioredis.from_url(
-    settings.REDIS_URL,
-    encoding="utf-8", 
-    decode_responses=True
-)
+redis_client = None
+if "redis" in settings.REDIS_URL:
+    try:
+        redis_client = aioredis.from_url(
+            settings.REDIS_URL,
+            encoding="utf-8",
+            decode_responses=True
+        )
+    except:
+        pass
 
 async def get_db_session() -> AsyncSession:
     async with async_session_maker() as session:
@@ -34,5 +39,5 @@ async def get_db_session() -> AsyncSession:
         finally:
             await session.close()
 
-async def get_redis() -> aioredis.Redis:
+async def get_redis():
     return redis_client
