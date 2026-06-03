@@ -1,26 +1,19 @@
 {% extends "base.html" %}
-{% block title %}پنل فروشنده{% endblock %}
 {% block content %}
-<h2>داشبورد فروشنده</h2>
-<div class="card mt-4">
-    <div class="card-body">
-        <h5 class="card-title">فروش محصول</h5>
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>پنل فروشندگان</h2>
+        <button class="btn btn-primary">ثبت سفارش جدید</button>
+    </div>
+    <div class="card p-4">
+        <h5>مشاهده موجودی واقعی و رزرو</h5>
+        <p class="text-muted small">موجودی نمایش داده شده شامل کالاهای رزرو نشده است.</p>
         <table class="table mt-3">
-            <thead>
-                <tr>
-                    <th>نام</th>
-                    <th>قیمت</th>
-                    <th>موجودی</th>
-                    <th>عملیات</th>
-                </tr>
-            </thead>
-            <tbody id="product-sale-list"></tbody>
+            <thead><tr><th>کالا</th><th>کل</th><th>رزرو شده</th><th>قابل فروش</th></tr></thead>
+            <tbody>
+                <tr><td>لپ‌تاپ ایسوس</td><td>۱۵</td><td>۳</td><td>۱۲</td></tr>
+            </tbody>
         </table>
     </div>
 </div>
-{% endblock %}
-{% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', () => { loadProductsForSale(); });
-</script>
 {% endblock %}

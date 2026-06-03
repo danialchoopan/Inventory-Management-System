@@ -1,26 +1,81 @@
 {% extends "base.html" %}
-{% block title %}پنل مدیریت{% endblock %}
 {% block content %}
-<h2>داشبورد مدیر</h2>
-<div class="card mt-4">
-    <div class="card-body">
-        <h5 class="card-title">لیست محصولات</h5>
-        <table class="table mt-3">
-            <thead>
-                <tr>
-                    <th>SKU</th>
-                    <th>نام</th>
-                    <th>قیمت</th>
-                    <th>موجودی</th>
-                </tr>
-            </thead>
-            <tbody id="product-list"></tbody>
-        </table>
+<div class="main-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>داشبورد مدیریتی و آنالیتیکس</h2>
+        <div>
+            <button class="btn btn-outline-primary me-2"><i class="bi bi-file-earmark-excel"></i> خروجی اکسل</button>
+            <button class="btn btn-primary"><i class="bi bi-plus-lg"></i> تعریف کالای جدید</button>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card p-3">
+                <small class="text-muted">ارزش کل انبار</small>
+                <h3 class="mb-0 mt-2">۱.۲۵ میلیارد <small>تومان</small></h3>
+                <div class="text-success small mt-2"><i class="bi bi-arrow-up"></i> ۱۲٪ رشد ماهانه</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3">
+                <small class="text-muted">کالاهای پرگردش</small>
+                <h3 class="mb-0 mt-2">۴۵ <small>قلم</small></h3>
+                <div class="text-primary small mt-2">لپ‌تاپ ایسوس (رتبه ۱)</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3 border-start border-4 border-warning">
+                <small class="text-muted">نقطه سفارش (هشدار)</small>
+                <h3 class="mb-0 mt-2 text-warning">۱۲ <small>مورد</small></h3>
+                <div class="small mt-2">نیاز به تامین فوری</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card p-3 border-start border-4 border-danger">
+                <small class="text-muted">کالاهای منقضی/Dead</small>
+                <h3 class="mb-0 mt-2 text-danger">۸ <small>مورد</small></h3>
+                <div class="small mt-2">ضرر برآوردی: ۵۰ میلیون</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-8">
+            <div class="card p-4">
+                <h5 class="mb-4">وضعیت موجودی انبارها (Multi-Warehouse)</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>نام کالا</th>
+                                <th>SKU</th>
+                                <th>انبار مرکزی</th>
+                                <th>انبار غرب</th>
+                                <th>وضعیت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="product-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5 class="mb-4">لاگ ممیزی (Audit Trail)</h5>
+                <div class="list-group list-group-flush small">
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between"><strong>جابجایی کالا</strong> <span class="text-muted">۱۰:۴۵</span></div>
+                        <div class="text-muted">توسط انباردار از قفسه A-1 به B-2</div>
+                    </div>
+                    <div class="list-group-item px-0">
+                        <div class="d-flex justify-content-between"><strong>ویرایش قیمت</strong> <span class="text-muted">۰۹:۳۰</span></div>
+                        <div class="text-muted">توسط مدیر (SKU: PHN-SAMI)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-{% endblock %}
-{% block extra_js %}
-<script>
-    document.addEventListener('DOMContentLoaded', () => { loadProducts(); });
-</script>
 {% endblock %}

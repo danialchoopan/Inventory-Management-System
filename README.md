@@ -1,52 +1,52 @@
-# سیستم مدیریت هوشمند انبار 📦 | Smart Inventory Management System
+# سیستم پیشرفته و هوشمند مدیریت انبارداری (Advanced Smart Inventory) 📦
 
-[English Version Below](#english-version)
+این پروژه یک راهکار جامع و صنعتی برای مدیریت دیجیتال انبار، فروش، صندوق و تدارکات است که با معماری پاک (Clean Architecture) پیاده‌سازی شده است.
 
-این یک سیستم مدیریت انبار مدرن و مقیاس‌پذیر است که با استفاده از **FastAPI**، **PostgreSQL** (در محیط توسعه SQLite) و **Redis** ساخته شده است. این برنامه دارای رابط کاربری وب فارسی و سیستم کنترل دسترسی بر اساس نقش (RBAC) می‌باشد.
+## 🚀 قابلیت‌های کلیدی و نقش‌های کاربری (RBAC)
 
-## ✨ ویژگی‌های کلیدی
+### ۱. مدیر کل (Admin) - داشبورد آنالیتیکس
+- **مشاهده لحظه‌ای ارزش انبار:** محاسبه اتوماتیک ارزش ریالی کالاها.
+- **نمودارها و گزارشات:** شناسایی کالاهای پرفروش و کم‌گردش (Dead Stock).
+- **مدیریت چندانباره:** کنترل موجودی در انبار مرکزی و شعبه‌ها.
+![پنل مدیر](screenshots/manager.png)
 
-### ۱. رابط کاربری وب حرفه‌ای 🎨
-دارای سه پنل مجزا برای کاربران مختلف با استفاده از فونت زیبای **وزیرمتن** و **بوت‌استرپ ۵**:
-- **پنل مدیر**: مدیریت کامل محصولات و مشاهده گزارش‌ها.
-- **پنل فروشنده**: ثبت سریع فروش و مرجوعی کالا.
-- **پنل انباردار**: ثبت شمارش کالا و اصلاح موجودی (Adjustment).
+### ۲. فروشنده (Seller) - ثبت سفارش
+- **صدور پیش‌فاکتور:** رزرو موقت کالا برای مشتریان.
+- **موجودی واقعی:** تفکیک موجودی کل از موجودی رزرو شده.
+![پنل فروشنده](screenshots/seller.png)
 
-### ۲. امنیت و سطوح دسترسی (RBAC) 🔐
-دسترسی‌ها به دقت بر اساس نقش کاربر محدود شده است تا امنیت داده‌ها حفظ شود.
+### ۳. صندوق‌دار (Cashier) - پایانه فروش (POS)
+- **فروش سریع:** بهینه‌سازی شده برای مانیتورهای لمسی و بارکدخوان.
+- **تسویه حساب:** محاسبه مالیات و صدور فاکتور نهایی.
+![پنل صندوق](screenshots/cashier.png)
 
-### ۳. کنترل همزمانی (Optimistic Locking) 🔒
-استفاده از سیستم نسخه گذاری برای جلوگیری از تداخل در به‌روزرسانی موجودی توسط چندین کاربر به صورت همزمان.
+### ۴. انباردار (Storekeeper) - رسید و حواله
+- **جانمایی کالا (Slotting):** مدیریت دقیق آدرس کالا (ردیف، قفسه، سلول).
+- **انبارگردانی:** ثبت مغایرت‌های موجودی به صورت دیجیتال.
+![پنل انباردار](screenshots/storekeeper.png)
 
-### ۴. معماری پاک (Clean Architecture) 🏗️
-جداسازی لایه‌های منطق تجاری، دسترسی به داده‌ها و ارائه برای نگهداری آسان‌تر.
-
----
-
-## 📸 اسکرین‌شات‌ها
-
-### ۱. صفحه ورود (Login)
-![Login Screen](screenshots/login.png)
-
-### ۲. پنل مدیریت (Manager Panel)
-![Manager Dashboard](screenshots/manager.png)
-
-### ۳. پنل فروشنده (Seller Panel)
-![Seller Dashboard](screenshots/seller.png)
-
-### ۴. پنل انباردار (Worker Panel)
-![Worker Dashboard](screenshots/worker.png)
+### ۵. کارگر انبار (Worker) - عملیات PDA
+- **Picking & Packing:** مسیر یابی هوشمند برای جمع‌آوری کالا.
+- **اسکن بارکد:** تایید چیدمان و خروج کالا با اسکنر.
+![پنل کارگر](screenshots/worker.png)
 
 ---
 
-## 🚀 راه اندازی
+## 💡 ویژگی‌های فنی پیشرفته
+- **ردیابی بچ و سریال (Batch/Serial):** مناسب برای صنایع دارویی و قطعات الکترونیک.
+- **Audit Trail:** ثبت تمامی عملیات‌ها با جزییات دقیق زمان و کاربر.
+- **کنترل کیفیت (QC):** قرنطینه خودکار کالاهای ورودی تا تایید نهایی.
 
-۱. نصب وابستگی‌ها:
+---
+
+## 🏗 نصب و راه‌اندازی
+
+۱. نصب کتابخانه‌ها:
 ```bash
 pip install -r requirements.txt
 ```
 
-۲. آماده‌سازی دیتابیس و داده‌های تستی (Persian Seed):
+۲. مقداردهی اولیه داده‌ها (Seed):
 ```bash
 PYTHONPATH=. python3 scripts/seed_data.py
 ```
@@ -57,22 +57,4 @@ uvicorn app.main:app --reload
 ```
 
 ---
-
-<a name="english-version"></a>
-# Smart Inventory Management System 📦
-
-A modern, scalable inventory system built with **FastAPI**, **PostgreSQL**, and **Redis**. Featuring a dedicated Persian Web UI and Role-Based Access Control (RBAC).
-
-## ✨ Key Features
-
-- **Multi-Role Web UI**: Dedicated panels for Manager, Seller, and Warehouse Worker.
-- **RBAC**: Secure endpoints and UI elements based on user roles.
-- **Optimistic Locking**: Prevents race conditions during stock updates.
-- **Persian Support**: Full support for Persian language and Vazirmatn font.
-- **API Documentation**: Comprehensive documentation in `README_API.md`.
-
-## 🛠️ Tech Stack
-- **Backend**: FastAPI (Python)
-- **Database**: SQLAlchemy, SQLite (Development), PostgreSQL (Production ready)
-- **Frontend**: HTML5, CSS3 (Bootstrap 5), JavaScript
-- **Auth**: JWT (JSON Web Tokens)
+*طراحی شده با FastAPI، Bootstrap 5 (RTL) و فونت وزیرمتن.*
