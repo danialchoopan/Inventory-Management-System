@@ -57,4 +57,4 @@ uvicorn app.main:app --reload
 ```
 
 ---
-*طراحی شده با FastAPI، Bootstrap 5 (RTL) و فونت وزیرمتن.*
+*طراحی شده با FastAPI، Bootstrap 5 (RTL) *
